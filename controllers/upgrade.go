@@ -30,6 +30,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/keikoproj/upgrade-manager/api/v1alpha1"
 	"github.com/keikoproj/upgrade-manager/controllers/common"
+	"github.com/keikoproj/upgrade-manager/controllers/common/log"
 	awsprovider "github.com/keikoproj/upgrade-manager/controllers/providers/aws"
 	kubeprovider "github.com/keikoproj/upgrade-manager/controllers/providers/kubernetes"
 	"github.com/pkg/errors"
@@ -588,16 +589,16 @@ func (r *RollingUpgradeContext) IsInstanceDrifted(instance *autoscaling.Instance
 		}
 
 		if !strings.EqualFold(launchTemplateName, instanceTemplateName) {
-			r.Info("instance is drifted, mismatch in launchtemplate name", "instanceID", instanceID, "instanceLT", instanceTemplateName, "asgLT", launchTemplateName, "name", r.RollingUpgrade.NamespacedName())
+			log.Debug("instance is drifted, mismatch in launchtemplate name", "instanceID", instanceID, "instanceLT", instanceTemplateName, "asgLT", launchTemplateName, "name", r.RollingUpgrade.NamespacedName())
 			return true
 		} else if !strings.EqualFold(instanceTemplateVersion, templateVersion) {
-			r.Info("instance is drifted, mismatch in launchtemplate version", "instanceID", instanceID, "instanceLT-version", instanceTemplateVersion, "asgLT-version", templateVersion, "name", r.RollingUpgrade.NamespacedName())
+			log.Debug("instance is drifted, mismatch in launchtemplate version", "instanceID", instanceID, "instanceLT-version", instanceTemplateVersion, "asgLT-version", templateVersion, "name", r.RollingUpgrade.NamespacedName())
 			return true
 		}
 
 	} else if scalingGroup.MixedInstancesPolicy != nil {
 		if instance.LaunchTemplate == nil {
-			r.Info("instance is drifted, instance launchtemplate is empty", "name", r.RollingUpgrade.NamespacedName())
+			log.Debug("instance is drifted, instance launchtemplate is empty", "name", r.RollingUpgrade.NamespacedName())
 			return true
 		}
 
@@ -614,10 +615,10 @@ func (r *RollingUpgradeContext) IsInstanceDrifted(instance *autoscaling.Instance
 		}
 
 		if !strings.EqualFold(launchTemplateName, instanceTemplateName) {
-			r.Info("instance is drifted, mismatch in launchtemplate name", "instanceID", instanceID, "instanceLT", instanceTemplateName, "asgLT", launchTemplateName, "name", r.RollingUpgrade.NamespacedName())
+			log.Debug("instance is drifted, mismatch in launchtemplate name", "instanceID", instanceID, "instanceLT", instanceTemplateName, "asgLT", launchTemplateName, "name", r.RollingUpgrade.NamespacedName())
 			return true
 		} else if !strings.EqualFold(instanceTemplateVersion, templateVersion) {
-			r.Info("instance is drifted, mismatch in launchtemplate version", "instanceID", instanceID, "instanceLT-version", instanceTemplateVersion, "asgLT-version", templateVersion, "name", r.RollingUpgrade.NamespacedName())
+			log.Debug("instance is drifted, mismatch in launchtemplate version", "instanceID", instanceID, "instanceLT-version", instanceTemplateVersion, "asgLT-version", templateVersion, "name", r.RollingUpgrade.NamespacedName())
 			return true
 		}
 	}
